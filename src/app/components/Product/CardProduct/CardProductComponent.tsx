@@ -1,58 +1,65 @@
+// DEPENDES
+import Link from "next/link"; // Importar Link de Next.js
+
+// ICONS
 import {
   MdChevronLeft,
   MdChevronRight,
   MdFavorite,
   MdShare,
+  MdShoppingCart,
+  MdShoppingBag,
 } from "react-icons/md";
 
-const CardProductComponent = () => {
+// TYPES
+interface CardProductComponentProps {
+  product: {
+    id: number;
+    title: string;
+    price: number;
+    description: string;
+    category: string;
+    image: string;
+    rating?: {
+      rate: number;
+      count: number;
+    };
+  };
+}
+
+// COMPONENTS
+import ButtonProductComponent from "../ButtonProduct/ButtonProductComponent";
+import ImageProductComponent from "../ImageProduct/ImageProductComponent";
+import HeaderTextProductComponent from "../HeaderTextProduct/HeaderTextProductComponent";
+import AddStockProductComponent from "../AddStockProduct/AddStockProductComponent";
+
+const CardProductComponent: React.FC<CardProductComponentProps> = ({
+  product,
+}) => {
   return (
     <article className="product_card_article">
-      <header className="product_card_header">
-        <figure className="product_card_figure">
-          <img
-            className="product_card_img"
-            src="https://cdn.pixabay.com/photo/2015/02/25/12/08/locomotive-648671_960_720.jpg"
-            alt="xd"
+      {/* Enlace que envuelve todo menos los botones */}
+      <Link href="/producto/123" className="product_card_link" tabIndex={-1}>
+        <header className="product_card_header">
+          <ImageProductComponent product={product} />
+
+          <HeaderTextProductComponent product={product} />
+        </header>
+      </Link>
+
+      {/* Botones de interacción que deben funcionar sin afectar el enlace */}
+      <div className="product_card_div_inferior">
+        <AddStockProductComponent />
+
+        <div className="product_card_buttons">
+          <ButtonProductComponent Icon={MdShoppingBag} text={"Comprar ahora"} />
+
+          <ButtonProductComponent
+            Icon={MdShoppingCart}
+            text={"Guardar en el carrito"}
           />
-
-          <div className="product_card_figure_container_icons">
-            <div className="product_card_figure_container_icons_div">
-              <MdFavorite className="product_card_figure_container_icons_div_icon" />
-              <MdShare className="product_card_figure_container_icons_div_icon" />
-            </div>
-          </div>
-        </figure>
-
-        <div className="product_card_div">
-          <header className="product_card_header_add">
-            <h4 className="product_card_title_h4">Titulo del god</h4>
-
-            <div className="product_card_add_div">
-              <a className="product_card_add_button_right">
-                <MdChevronLeft className="product_card_add_button_icon" />
-              </a>
-
-              <input
-                type="number"
-                name=""
-                id=""
-                className="product_card_add_input"
-                min="0"
-                placeholder="1"
-              />
-
-              <a className="product_card_add_button_left">
-                <MdChevronRight className="product_card_add_button_icon" />
-              </a>
-            </div>
-          </header>
-          <span>
-            Precio
-            <strong>$402 MXN.</strong>
-          </span>
         </div>
-      </header>
+      </div>
     </article>
   );
 };

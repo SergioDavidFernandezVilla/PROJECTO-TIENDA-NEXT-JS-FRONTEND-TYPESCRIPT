@@ -2,6 +2,7 @@ import Image from "next/image";
 import styles from "./page.module.css";
 
 import CardProductComponent from "../app/components/Product/CardProduct/CardProductComponent";
+import Products from "../app/utils/jsons/Products";
 
 export default function Home() {
   return (
@@ -17,7 +18,9 @@ export default function Home() {
             priority
           />
 
-          <CardProductComponent />
+          {Products.map((product) => {
+            return <CardProductComponent key={product.id} product={product} />;
+          })}
 
           <ol>
             <li>
