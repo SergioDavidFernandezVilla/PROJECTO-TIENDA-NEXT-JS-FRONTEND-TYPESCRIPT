@@ -1,12 +1,11 @@
 import mongoose from "mongoose";
 
-const MONGODB_URI = process.env.MONGODB_URI!;
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://root:password@localhost:27017/faketienda?authSource=admin";
 
 if (!MONGODB_URI) {
   throw new Error("⚠️ Debes definir MONGODB_URI en tu archivo .env.local");
 }
 
-// Variable para almacenar la conexión y evitar múltiples conexiones
 let cached = (global as any).mongoose || { conn: null, promise: null };
 
 export async function connectDB() {
@@ -17,7 +16,11 @@ export async function connectDB() {
 
   if (!cached.promise) {
     console.log("🔌 Conectando a MongoDB...");
-    cached.promise = mongoose.connect(MONGODB_URI).then((mongoose) => {
+    cached.promise = mongoose.connect(MONGODB_URI, {
+      dbName: "fakemanga",
+      user: "user",
+      pass: "naruto12",
+    }).then((mongoose) => {
       console.log("✅ Conectado a MongoDB");
       return mongoose;
     });
@@ -27,5 +30,4 @@ export async function connectDB() {
   return cached.conn;
 }
 
-// Almacenar la conexión en `global` para evitar múltiples conexiones en desarrollo
 (global as any).mongoose = cached;

@@ -1,42 +1,42 @@
-{ pkgs }:
+{ pkgs }: {
+  # Canal estable de Nix
+  channel = "stable-24.05";
 
-{
-  # Definir el canal de pkgs
-  channel = "stable-24.05";  # Usa "unstable" si necesitas versiones más recientes
+  # Instalación de paquetes esenciales
   packages = [
-    pkgs.nodejs_20   # Instalar Node.js (versión 20)
-    pkgs.yarn        # Instalar Yarn (gestor de paquetes)
-    pkgs.nodePackages.pnpm  # Instalar PNPM
-    pkgs.bun          # Instalar Bun (opcional)
-    pkgs.mongodb      # Instalar MongoDB
-    pkgs.mongosh      # Instalar Mongosh (cliente de MongoDB)
+    pkgs.nodejs_20        # Instalar Node.js (versión 20)
+    pkgs.yarn             # Instalar Yarn
+    pkgs.nodePackages.pnpm # Instalar PNPM
+    pkgs.bun              # Instalar Bun
+    pkgs.mongodb          # Instalar MongoDB
+    pkgs.mongosh          # Cliente de MongoDB
+    pkgs.docker           # Instalar Docker
+    pkgs.docker-compose   # Instalar Docker Compose
   ];
 
-  # Configuración del servicio MongoDB
-  services.mongodb = {
-    enable = true;    # Habilitar MongoDB en el entorno
+  # Configuración de servicios
+  services = {
+    mongodb.enable = true;   # Habilitar MongoDB
+    docker.enable = true;    # Habilitar Docker
   };
 
-  # Definir las variables de entorno
+  # Variables de entorno
   env = {
-    # Si necesitas definir alguna variable de entorno específica
-    # Por ejemplo:
-     DATABASE_URL = "mongodb://localhost:27017";
+    DATABASE_URL = "mongodb://localhost:27017";
   };
 
-  # Configuración de IDX (espacio de trabajo de desarrollo)
+  # Configuración del espacio de trabajo en Google IDX
   idx = {
-    # Configurar extensiones si es necesario
+    # Extensiones recomendadas
     extensions = [
-      # "vscodevim.vim" # Descomentar para habilitar extensión de Vim
+      # "vscodevim.vim" # Descomentar si usas Vim en VSCode
     ];
 
-    # Configuración cuando el espacio de trabajo se crea
     workspace = {
-      # Ejecutar comandos cuando se crea el workspace
+      # Comandos a ejecutar al crear el workspace
       onCreate = {
         npm-install = "npm ci --no-audit --prefer-offline --no-progress --timing";
-        # Abrir estos archivos por defecto si existen
+        # Archivos a abrir automáticamente
         default.openFiles = [
           "pages/index.tsx" "pages/index.js"
           "src/pages/index.tsx" "src/pages/index.js"
@@ -45,14 +45,16 @@
         ];
       };
 
-      # Configuración de arranque
+      # Configuración al iniciar el workspace
       onStart = {
         # Iniciar MongoDB en el contenedor
         start-database = "mongod --dbpath=/workspace/data/db --bind_ip 0.0.0.0 --port 27017";
+        # Iniciar el demonio de Docker
+        start-docker = "dockerd > /workspace/docker.log 2>&1 &";
       };
     };
 
-    # Habilitar vistas previas y configurar su comportamiento
+    # Configuración de vistas previas en Google IDX
     previews = {
       enable = true;
       previews = {
