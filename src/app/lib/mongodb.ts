@@ -6,17 +6,26 @@ if (!MONGODB_URI) {
   throw new Error("⚠️ Debes definir MONGODB_URI en tu archivo .env.local");
 }
 
+// Variable para almacenar la conexión y evitar múltiples conexiones
 let cached = (global as any).mongoose || { conn: null, promise: null };
 
 export async function connectDB() {
-  if (cached.conn) return cached.conn; // Usa la conexión en caché si ya existe.
+  if (cached.conn) {
+    console.log("📡 Usando conexión existente a MongoDB");
+    return cached.conn;
+  }
 
   if (!cached.promise) {
-    cached.promise = mongoose.connect(MONGODB_URI, {
-      dbName: "FakeTienda",
-    } as mongoose.ConnectOptions);
+    console.log("🔌 Conectando a MongoDB...");
+    cached.promise = mongoose.connect(MONGODB_URI).then((mongoose) => {
+      console.log("✅ Conectado a MongoDB");
+      return mongoose;
+    });
   }
 
   cached.conn = await cached.promise;
   return cached.conn;
 }
+
+// Almacenar la conexión en `global` para evitar múltiples conexiones en desarrollo
+(global as any).mongoose = cached;

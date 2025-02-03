@@ -1,39 +1,58 @@
-# To learn more about how to use Nix to configure your environment
-# see: https://developers.google.com/idx/guides/customize-idx-env
-{pkgs}: {
-  # Which nixpkgs channel to use.
-  channel = "stable-24.05"; # or "unstable"
-  # Use https://search.nixos.org/packages to find packages
+{ pkgs }:
+
+{
+  # Definir el canal de pkgs
+  channel = "stable-24.05";  # Usa "unstable" si necesitas versiones más recientes
   packages = [
-    pkgs.nodejs_20
-    pkgs.yarn
-    pkgs.nodePackages.pnpm
-    pkgs.bun
-    pkgs.mongodb
+    pkgs.nodejs_20   # Instalar Node.js (versión 20)
+    pkgs.yarn        # Instalar Yarn (gestor de paquetes)
+    pkgs.nodePackages.pnpm  # Instalar PNPM
+    pkgs.bun          # Instalar Bun (opcional)
+    pkgs.mongodb      # Instalar MongoDB
+    pkgs.mongosh      # Instalar Mongosh (cliente de MongoDB)
   ];
-  # Sets environment variables in the workspace
-  env = {};
+
+  # Configuración del servicio MongoDB
+  services.mongodb = {
+    enable = true;    # Habilitar MongoDB en el entorno
+  };
+
+  # Definir las variables de entorno
+  env = {
+    # Si necesitas definir alguna variable de entorno específica
+    # Por ejemplo:
+     DATABASE_URL = "mongodb://localhost:27017";
+  };
+
+  # Configuración de IDX (espacio de trabajo de desarrollo)
   idx = {
-    # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
+    # Configurar extensiones si es necesario
     extensions = [
-      # "vscodevim.vim"
+      # "vscodevim.vim" # Descomentar para habilitar extensión de Vim
     ];
+
+    # Configuración cuando el espacio de trabajo se crea
     workspace = {
-      # Runs when a workspace is first created with this `dev.nix` file
+      # Ejecutar comandos cuando se crea el workspace
       onCreate = {
         npm-install = "npm ci --no-audit --prefer-offline --no-progress --timing";
-        # Open editors for the following files by default, if they exist:
+        # Abrir estos archivos por defecto si existen
         default.openFiles = [
-          # Cover all the variations of language, src-dir, router (app/pages)
           "pages/index.tsx" "pages/index.js"
           "src/pages/index.tsx" "src/pages/index.js"
           "app/page.tsx" "app/page.js"
           "src/app/page.tsx" "src/app/page.js"
         ];
       };
-      # To run something each time the workspace is (re)started, use the `onStart` hook
+
+      # Configuración de arranque
+      onStart = {
+        # Iniciar MongoDB en el contenedor
+        start-database = "mongod --dbpath=/workspace/data/db --bind_ip 0.0.0.0 --port 27017";
+      };
     };
-    # Enable previews and customize configuration
+
+    # Habilitar vistas previas y configurar su comportamiento
     previews = {
       enable = true;
       previews = {
