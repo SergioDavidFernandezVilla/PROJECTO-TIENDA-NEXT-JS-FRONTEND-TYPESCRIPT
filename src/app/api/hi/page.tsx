@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import Product from "../product/Product";
+import Product from "../product/route";
 import { connectDB } from "@/app/lib/mongodb";
 
 export default async function handler(

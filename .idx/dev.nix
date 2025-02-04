@@ -47,8 +47,7 @@
 
       # Configuración al iniciar el workspace
       onStart = {
-        # Iniciar MongoDB en el contenedor
-        start-database = "mongod --dbpath=/workspace/data/db --bind_ip 0.0.0.0 --port 27017";
+       
         # Iniciar el demonio de Docker
         start-docker = "dockerd > /workspace/docker.log 2>&1 &";
       };
