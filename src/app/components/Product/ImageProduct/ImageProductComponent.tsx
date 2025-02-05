@@ -1,6 +1,9 @@
 "use client";
 
+// ICONS
 import { MdFavorite, MdShare, MdBrokenImage } from "react-icons/md";
+
+// DEPENDES
 import Image from "next/image";
 import { styled } from "styled-components";
 

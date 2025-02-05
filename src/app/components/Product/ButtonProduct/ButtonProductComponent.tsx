@@ -1,8 +1,12 @@
 "use client";
 
+// DEPENDES
 import { styled } from "styled-components";
+
+// ICONS
 import { MdShoppingBag, MdShoppingCart } from "react-icons/md";
 
+//TYPES
 interface ButtonProductComponentProps {
   iconName: "MdShoppingBag" | "MdShoppingCart";
   text: string;

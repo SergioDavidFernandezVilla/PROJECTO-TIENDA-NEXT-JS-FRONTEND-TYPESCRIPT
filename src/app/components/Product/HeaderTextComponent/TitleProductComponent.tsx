@@ -1,5 +1,8 @@
+
+// DEPENDES
 import React from "react";
 
+// TYPES
 interface TitleProductComponentProps {
   product: {
     title: string;
