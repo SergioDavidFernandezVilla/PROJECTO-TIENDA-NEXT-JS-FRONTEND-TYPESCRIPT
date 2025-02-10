@@ -8,6 +8,7 @@ import { MdOutlineSearch, MdFilterAlt } from "react-icons/md";
 
 // COMPONENTS
 import { CustomLiComponent } from "../CustomLi/CustomLiComponent";
+import SearchContentComponent from "./SearchContent/SearchContentComponet";
 
 // 📌 Contenedor del formulario
 const FormSearchComponentStyled = styled.form`
@@ -68,18 +69,27 @@ const IconSearchComponentStyled = styled(MdOutlineSearch)`
 
 const SearchFormHeroComponent = () => {
   const [textSearch, setTextSearch] = useState("");
+  const [modelSearch, setModelSearch] = useState(false);
 
   const ChangeTextSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTextSearch(e.target.value);
     console.log(textSearch);
   };
 
+  const ChangeModelSearch = () => {
+    setModelSearch(!modelSearch);
+  };
+
   return (
     <CustomLiComponent>
       <FormSearchComponentStyled action="">
+        {/*MODEL */}
+        {modelSearch && <SearchContentComponent />}
+
         <InputSearchComponentStyled
           type="text"
           placeholder="Funko mariguano..."
+          onClick={ChangeModelSearch}
           onChange={ChangeTextSearch}
         />
 
@@ -87,10 +97,12 @@ const SearchFormHeroComponent = () => {
           <IconSearchComponentStyled />
         </ButtonSearchIconComponentStyled>
 
-        <ButtonFilterSearchComponentStyled>
-          <span>Filter</span>
-          <MdFilterAlt />
-        </ButtonFilterSearchComponentStyled>
+        <div>
+          <ButtonFilterSearchComponentStyled>
+            <span>Filter</span>
+            <MdFilterAlt />
+          </ButtonFilterSearchComponentStyled>
+        </div>
       </FormSearchComponentStyled>
     </CustomLiComponent>
   );
